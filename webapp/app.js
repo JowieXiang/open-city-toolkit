@@ -21,6 +21,25 @@ const jsonParser = require('body-parser').json()
 const multer = require('multer')
 const uploadParser = multer()
 
+// Authentication
+const bcrypt = require('bcrypt')
+const passport = require('passport')
+const flash = require('express-flash')
+const session = require('express-session')
+const methodOverride = require('method-override')
+const users = [{ email: "ab@c", password: "hello" }]
+
+const initializePassport = require('./passport-config')
+initializePassport(
+  passport,
+  email => users.find(user => user.email === email),
+  id => users.find(user => user.id === id)
+)
+
+
+
+
+
 app.listen(expressPort, () => {
   console.log(`App listening on port ${expressPort}`)
 })
@@ -34,18 +53,66 @@ app.use('/lib/leaflet', express.static('node_modules/leaflet/dist'));
 app.use('/lib/leaflet-draw', express.static('node_modules/leaflet-draw/dist'));
 app.use('/lib/leaflet-groupedlayercontrol', express.static('node_modules/leaflet-groupedlayercontrol/src'));
 
+// Authentication
+app.use(express.urlencoded({ extended: false }))
+app.use(flash())
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false
+}))
+app.use(passport.initialize())
+app.use(passport.session())
+app.use(methodOverride('_method'))
+
 // Views (using Pug template engine)
 app.set('views', './views')
 app.set('view engine', 'pug')
 
+
+
 // index page
-app.get('/', (req, res) => {
+app.get('/', checkAuthenticated, (req, res) => {
   let options = {
     geoserverUrl,
     lat,
     lon
   }
   res.render('launch', options)
+})
+
+app.get('/login', checkNotAuthenticated, (req, res) => {
+  res.render('login', {})
+})
+
+app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
+  successRedirect: '/',
+  failureRedirect: '/login',
+  failureFlash: true
+}))
+
+app.delete('/logout', (req, res) => {
+  req.logOut()
+  res.redirect('/login')
+})
+
+app.get('/register', checkNotAuthenticated, (req, res) => {
+  res.render('register', {})
+})
+
+app.post('/register', checkNotAuthenticated, async (req, res) => {
+  try {
+    const hashedPassword = await bcrypt.hash(req.body.password, 10)
+    users.push({
+      id: Date.now().toString(),
+      name: req.body.name,
+      email: req.body.email,
+      password: hashedPassword
+    })
+    res.redirect('/login')
+  } catch {
+    res.redirect('/register')
+  }
 })
 
 // modules
@@ -167,3 +234,17 @@ app.use((err, req, res, next) => {
   res.status(500)
   res.json({ message: err.message && err.message.split('\n')[0] || err })
 })
+
+function checkAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next()
+  }
+  res.redirect('/login')
+}
+
+function checkNotAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return res.redirect('/')
+  }
+  next()
+}
