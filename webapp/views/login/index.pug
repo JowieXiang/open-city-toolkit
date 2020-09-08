@@ -1,21 +1,21 @@
 html
-    head
-        link(rel='stylesheet' href='/lib/bootstrap/css/bootstrap.min.css')
-    body
-        div(class="container")
-            h1 login    
-            if messages.error
-                p #{messages.error}
-            form(action="/login" method="POST")
-                div(class='form-group row')
-                    label(for="name" class="col-sm-2 col-form-label") email
-                    div(class='col-10')
-                        input(type="email" class="form-control" id="email" name="email")
-                div(class='form-group row')
-                    label(for="password" class="col-sm-2 col-form-label") password
-                    div(class='col-10')
-                        input(type="password" class="form-control" id="password" name="password")
-                div(class='form-group row')
-                    button(type="submit" class="btn btn-primary col") login
-                div(class='form-group row justify-center')
-                    a(href="/register") register
+	head
+		link(rel='stylesheet' href='/lib/bootstrap/css/bootstrap.min.css')
+	body
+		div(class="container")
+			h1 login    
+			if messages.error
+				p #{messages.error}
+			form(action="/login" method="POST")
+				div(class='form-group row')
+					label(for="name" class="col-sm-2 col-form-label") email
+					div(class='col-10')
+						input(type="email" class="form-control" id="email" name="email")
+				div(class='form-group row')
+					label(for="password" class="col-sm-2 col-form-label") password
+					div(class='col-10')
+						input(type="password" class="form-control" id="password" name="password")
+				div(class='form-group row')
+					button(type="submit" class="btn btn-primary col") login
+				div(class='form-group row justify-center')
+					a(href="/register") register

@@ -1,21 +1,21 @@
 html
-    head
-        link(rel='stylesheet' href='/lib/bootstrap/css/bootstrap.min.css')
-    body
-        div(class="container")
-            h1 Register    
-            form(action="/register" method="POST")
-                div(class='form-group row')
-                    label(for="name" class="col-sm-2 col-form-label") Name
-                    div(class='col-10')
-                        input(type="text" class="form-control" id="name" name="name")
-                div(class='form-group row')
-                    label(for="email" class="col-sm-2 col-form-label") Email
-                    div(class='col-10')
-                        input(type="email" class="form-control" id="email" name="email")
-                div(class='form-group row')
-                    label(for="password" class="col-sm-2 col-form-label") password
-                    div(class='col-10')
-                        input(type="password" class="form-control" id="password" name="password")
-                div(class='form-group row')
-                    button(type="submit" class="btn btn-primary col") register
+	head
+		link(rel='stylesheet' href='/lib/bootstrap/css/bootstrap.min.css')
+	body
+		div(class="container")
+			h1 Register    
+			form(action="/register" method="POST")
+				div(class='form-group row')
+					label(for="name" class="col-sm-2 col-form-label") Name
+					div(class='col-10')
+						input(type="text" class="form-control" id="name" name="name")
+				div(class='form-group row')
+					label(for="email" class="col-sm-2 col-form-label") Email
+					div(class='col-10')
+						input(type="email" class="form-control" id="email" name="email")
+				div(class='form-group row')
+					label(for="password" class="col-sm-2 col-form-label") password
+					div(class='col-10')
+						input(type="password" class="form-control" id="password" name="password")
+				div(class='form-group row')
+					button(type="submit" class="btn btn-primary col") register

@@ -65,7 +65,7 @@ router.post('/register', checkNotAuthenticated, async (req, res) => {
             email,
             password: hashedPassword
         });
-        newUser.save()
+        await newUser.save()
 
         res.redirect('/login')
     } catch {
